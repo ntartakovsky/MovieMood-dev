@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from io import StringIO
+import requests
+import json
 
 """
 # Welcome to Streamlit!
@@ -13,6 +15,16 @@ forums](https://discuss.streamlit.io).
 
 In the meantime, below is an example of what you can do with just a few lines of code:
 """
+
+def get_data(url, headers, data):
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        print("successfully fetched the data")
+        print(response.json())
+    else:
+        print(f"Hello person, there's a {response.status_code} error with your request")
+    return response.json()
+
 
 
 uploaded_file = st.file_uploader("Choose a file")
@@ -39,15 +51,6 @@ if uploaded_file is not None:
     recs = get_data(url, headers, data)
 
     st.write(recs)
-
-def get_data(url, headers, data):
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code == 200:
-            print("successfully fetched the data")
-            print(response.json())
-        else:
-            print(f"Hello person, there's a {response.status_code} error with your request")
-        return response.json()
 
 
 
