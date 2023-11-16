@@ -46,8 +46,6 @@ if uploaded_file is not None:
 
     recs = get_data(url, headers, data)
 
-    st.write(recs)
-
 
     col1,col2,col3,col4,col5=st.columns(5)
     cols=[col1,col2,col3,col4,col5]
