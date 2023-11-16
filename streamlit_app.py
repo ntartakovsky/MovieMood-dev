@@ -18,6 +18,27 @@ In the meantime, below is an example of what you can do with just a few lines of
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
+    
+    url = "https://neilprabhu.mids255.com/predict"
+ 
+    headers = {"Content-Type": "application/json"}
+
+    arr = df.to_numpy()
+
+    data = {
+        "music_list":[["Danceability","Energy","Key","Loudness","Mode","Speechiness","Acousticness","Instrumentalness","Liveness","Valence","Tempo","Time Signature"]]
+    }
+
+    for item in arr:
+        list_str = list(item)[-12:]
+        new_list = []
+        for num in list_str:
+            new_list.append(str(num))
+        data['music_list'].append(new_list)
+
+    recs = get_data(url, headers, data)
+
+    st.write(recs)
 
 def get_data(url, headers, data):
         response = requests.post(url, headers=headers, json=data)
@@ -29,26 +50,7 @@ def get_data(url, headers, data):
         return response.json()
 
 
-url = "https://neilprabhu.mids255.com/predict"
- 
-headers = {"Content-Type": "application/json"}
 
-arr = df.to_numpy()
-
-data = {
-    "music_list":[["Danceability","Energy","Key","Loudness","Mode","Speechiness","Acousticness","Instrumentalness","Liveness","Valence","Tempo","Time Signature"]]
-}
-
-for item in arr:
-    list_str = list(item)[-12:]
-    new_list = []
-    for num in list_str:
-        new_list.append(str(num))
-    data['music_list'].append(new_list)
-
-recs = get_data(url, headers, data)
-
-st.write(recs)
 
 
 
