@@ -7,13 +7,9 @@ import requests
 import json
 
 """
-# Welcome to Streamlit!
+# Welcome to MovieMood!
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
+Upload your Spotify playlist in a csv file below:
 """
 
 def get_data(url, headers, data):
@@ -52,6 +48,16 @@ if uploaded_file is not None:
 
     st.write(recs)
 
+
+    col1,col2,col3,col4,col5=st.columns(5)
+    cols=[col1,col2,col3,col4,col5]
+    for i in range(0,5):
+        with cols[i]:
+            title = recs['movies_list'][i]['omdb_title']
+            poster = recs['movies_list'][i]['omdb_poster']
+            st.write(f' <b style="color:#E50914"> {title} </b>',unsafe_allow_html=True)
+            # st.write("#")
+            st.image(poster)
 
 
 
