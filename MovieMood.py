@@ -73,11 +73,42 @@ filter_ratings = []
 with st.expander("See optional filters for movie recommendations"):
     filter_genres = st.multiselect(
         'What are your preferred movie genres?',
-        ['Comedy', 'Horror', 'Drama', 'Romance'])
+        ['Action',
+        'Adventure',
+        'Animation',
+        'Biography',
+        'Comedy',
+        'Crime',
+        'Documentary',
+        'Drama',
+        'Family',
+        'Fantasy',
+        'History',
+        'Horror',
+        'Music',
+        'Musical',
+        'Mystery',
+        'News',
+        'Reality-TV',
+        'Romance',
+        'Sci-Fi',
+        'Short',
+        'Thriller',
+        'Sport',
+        'Talk-Show',
+        'War',
+        'Western'])
 
     filter_ratings = st.multiselect(
         'What are your preferred movie ratings?',
         ['G', 'PG', 'PG-13', 'R', 'Unrated'])
+    
+    filter_imdb_score = st.selectbox(
+        "What is your preferred minimum IMDB score?",
+        (5, 6, 7, 8, 9),
+        index=None,
+        placeholder="Choose an option")
+
     
 
 if 'drop_movies' not in st.session_state:
@@ -114,6 +145,9 @@ if uploaded_file is not None:
     data["filter_ratings"] = list(filter_ratings)
     data["filter_genres"] = [x.lower() for x in list(filter_genres)]
 
+    if filter_imdb_score in [5,6,7,8,9]:
+        data["imdb_ratings"] = filter_imdb_score
+
     data['drop_movies'] = st.session_state.persisted_drops
 
     # Define remaining API parameters
@@ -133,7 +167,6 @@ if uploaded_file is not None:
         for item in st.session_state.all_movies:
             st.session_state.drop_movies.append(item)
             st.session_state.persisted_drops.append(item)
-        # st.session_state.persisted_drops = st.session_state.drop_movies
         data['drop_movies'] = st.session_state.drop_movies
         recs = get_data(url, headers, data)
 
@@ -142,7 +175,6 @@ if uploaded_file is not None:
     if st.button("Drop Disliked Movies", key="drop_dislikes"):
         for item in st.session_state.drop_movies:
             st.session_state.persisted_drops.append(item)
-        # st.session_state.persisted_drops = st.session_state.drop_movies
         data['drop_movies'] = st.session_state.drop_movies
         recs = get_data(url, headers, data)
 
@@ -157,7 +189,7 @@ if uploaded_file is not None:
     col1,col2,col3,col4,col5=st.columns(5)
     cols=[col1,col2,col3,col4,col5]
     
-    for i in range(0,5):
+    for i in range(0,len(recs['movies_list'])):
         with cols[i]:
             title = recs['movies_list'][i]['omdb_title']
             poster = recs['movies_list'][i]['omdb_poster']

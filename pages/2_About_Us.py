@@ -24,7 +24,7 @@ st.write(f'<br><br><br>',unsafe_allow_html=True)
 col1,col2,col3,col4,col5=st.columns(5)
 cols=[col1,col2,col3,col4,col5]
 
-member_names = ["Neta Tartakovsky", "Sumedh Shah", "Josie Ruggieri", "Neil Patel", "Will Dudek"]
+member_names = ["Neta Tartakovsky", "Sumedh Shah", "Josie Ruggieri", "Neil Prabhu", "Will Dudek"]
 
 for i in range(0,5):    
     with cols[i]:
