@@ -78,6 +78,20 @@ with st.expander("See optional filters for movie recommendations"):
     filter_ratings = st.multiselect(
         'What are your preferred movie ratings?',
         ['G', 'PG', 'PG-13', 'R', 'Unrated'])
+    
+
+if 'drop_movies' not in st.session_state:
+    st.session_state.drop_movies = []
+
+if 'all_movies' not in st.session_state:
+    st.session_state.all_movies = []
+
+if 'persisted_drops' not in st.session_state:
+    st.session_state.persisted_drops = []
+
+
+
+st.write(f'<br><br>',unsafe_allow_html=True)
 
 
 # Get the movie recommendations and display them
@@ -100,6 +114,8 @@ if uploaded_file is not None:
     data["filter_ratings"] = list(filter_ratings)
     data["filter_genres"] = [x.lower() for x in list(filter_genres)]
 
+    data['drop_movies'] = st.session_state.persisted_drops
+
     # Define remaining API parameters
     url = "https://neilprabhu.mids255.com/predict"
     headers = {"Content-Type": "application/json"}
@@ -109,10 +125,28 @@ if uploaded_file is not None:
 
 
 
+
+    st.write("Movie Recommendations")
+
     # Set up the button to regenerate the recommendations
-    if st.button("Regenerate Recommendations", key="get_recs"):
-        # "drop_movies": [{"omdb_title":"Luca","omdb_director":"Enrico Casarosa"},{"omdb_title":"Kiss of the Dragon","omdb_director":"Chris Nahon"}]
+    if st.button("↻ Regenerate Recommendations", key="regenerate"):
+        for item in st.session_state.all_movies:
+            st.session_state.drop_movies.append(item)
+            st.session_state.persisted_drops.append(item)
+        # st.session_state.persisted_drops = st.session_state.drop_movies
+        data['drop_movies'] = st.session_state.drop_movies
         recs = get_data(url, headers, data)
+
+
+    # Set up the button to drop the disliked movies
+    if st.button("Drop Disliked Movies", key="drop_dislikes"):
+        for item in st.session_state.drop_movies:
+            st.session_state.persisted_drops.append(item)
+        # st.session_state.persisted_drops = st.session_state.drop_movies
+        data['drop_movies'] = st.session_state.drop_movies
+        recs = get_data(url, headers, data)
+
+    
 
         
 
@@ -136,6 +170,14 @@ if uploaded_file is not None:
             rated = recs['movies_list'][i]['rated']
             imdb_url = recs['movies_list'][i]['imdb_url']
 
+
+            movie_dict = {'omdb_title': title, 'omdb_director': director}
+            st.session_state.all_movies.append(movie_dict)
+
+
+
+
+
             st.write(f' <p style="font-size: 0.9rem;height: 50px;display: flex;align-items: end;font-weight: 600;"> {title} </p>',unsafe_allow_html=True)
             st.image(poster, use_column_width="always")
             
@@ -146,6 +188,10 @@ if uploaded_file is not None:
                              key=title+"-"+director+"-review",
                              horizontal=True,
                              label_visibility="collapsed")
+            
+            if review == ":thumbsdown:":
+                drop_movie = {'omdb_title': title, 'omdb_director': director}
+                st.session_state.drop_movies.append(drop_movie)
             
 
             with st.expander("More details"):
