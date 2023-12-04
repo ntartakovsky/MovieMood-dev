@@ -33,6 +33,11 @@ st.markdown(
             align-items: center;
             justify-content: center;
         }
+
+        div[data-testid="stButton"]
+        {
+            text-align: end;
+        } 
     </style>
     """,
     unsafe_allow_html=True
@@ -106,11 +111,11 @@ with st.expander("See optional filters for movie recommendations"):
         'What are your preferred movie ratings?',
         ['G', 'PG', 'PG-13', 'R', 'Unrated'])
     
-    filter_imdb_score = st.selectbox(
-        "What is your preferred minimum IMDB score?",
-        (5, 6, 7, 8, 9),
-        index=None,
-        placeholder="Choose an option")
+    # filter_imdb_score = st.selectbox(
+    #     "What is your preferred minimum IMDB score?",
+    #     (5, 6, 7, 8, 9),
+    #     index=None,
+    #     placeholder="Choose an option")
 
     
 
@@ -148,8 +153,8 @@ if uploaded_file is not None:
     data["filter_ratings"] = list(filter_ratings)
     data["filter_genres"] = [x.lower() for x in list(filter_genres)]
 
-    if filter_imdb_score in [5,6,7,8,9]:
-        data["imdb_ratings"] = filter_imdb_score
+    # if filter_imdb_score in [5,6,7,8,9]:
+    #     data["imdb_ratings"] = filter_imdb_score
 
     data['drop_movies'] = st.session_state.persisted_drops
 
@@ -161,18 +166,20 @@ if uploaded_file is not None:
     recs = get_data(url, headers, data)
 
 
+    col1,col2=st.columns(2)
+    with col1:
+        st.write(f' <p style="font-size: 1.3rem;font-weight: 600;"> Movie Recommendations </p>',unsafe_allow_html=True)
+    with col2:
+        # Set up the button to regenerate the recommendations
+        if st.button("↻ Regenerate Recommendations", key="regenerate"):
+            # st.write(data)
+            for item in st.session_state.all_movies:
+                st.session_state.drop_movies.append(item)
+                st.session_state.persisted_drops.append(item)
+            data['drop_movies'] = st.session_state.drop_movies
+            recs = get_data(url, headers, data)
 
 
-    st.write("Movie Recommendations")
-
-    # Set up the button to regenerate the recommendations
-    if st.button("↻ Regenerate Recommendations", key="regenerate"):
-        # st.write(data)
-        for item in st.session_state.all_movies:
-            st.session_state.drop_movies.append(item)
-            st.session_state.persisted_drops.append(item)
-        data['drop_movies'] = st.session_state.drop_movies
-        recs = get_data(url, headers, data)
 
 
     # # Set up the button to drop the disliked movies
