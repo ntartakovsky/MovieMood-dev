@@ -25,8 +25,9 @@ col1,col2,col3,col4,col5=st.columns(5)
 cols=[col1,col2,col3,col4,col5]
 
 member_names = ["Neta Tartakovsky", "Sumedh Shah", "Josie Ruggieri", "Neil Prabhu", "Will Dudek"]
+member_photos = ['Neta.jpeg', 'Sumedh.jpeg', 'Josie.jpeg', 'Neil.jpeg', 'Will.jpeg']
 
 for i in range(0,5):    
     with cols[i]:
+        st.image('images/'+member_photos[i], use_column_width="always")
         st.write(member_names[i])
-        st.image('linkedin_img.jpeg', use_column_width="always")
