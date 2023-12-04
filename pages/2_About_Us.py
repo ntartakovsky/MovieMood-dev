@@ -15,6 +15,10 @@ st.markdown(
         {
             text-align: center;
         } 
+        div[data-testid="stLinkButton"] p
+        {
+            font-size: 0.9rem !important;
+        } 
     </style>
     """,
     unsafe_allow_html=True
