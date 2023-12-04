@@ -40,13 +40,16 @@ st.markdown(
 
 
 def get_data(url, headers, data):
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        print("successfully fetched the data")
-        print(response.json())
-    else:
-        print(f"Hello person, there's a {response.status_code} error with your request")
-    return response.json()
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            print("successfully fetched the data")
+            print(response.json())
+        else:
+            print(f"Hello person, there's a {response.status_code} error with your request")
+        return response.json()
+    except:
+        return {'movies_list': []}
 
 
 # Set up the title & introduction!
@@ -164,6 +167,7 @@ if uploaded_file is not None:
 
     # Set up the button to regenerate the recommendations
     if st.button("↻ Regenerate Recommendations", key="regenerate"):
+        # st.write(data)
         for item in st.session_state.all_movies:
             st.session_state.drop_movies.append(item)
             st.session_state.persisted_drops.append(item)
@@ -171,12 +175,12 @@ if uploaded_file is not None:
         recs = get_data(url, headers, data)
 
 
-    # Set up the button to drop the disliked movies
-    if st.button("Drop Disliked Movies", key="drop_dislikes"):
-        for item in st.session_state.drop_movies:
-            st.session_state.persisted_drops.append(item)
-        data['drop_movies'] = st.session_state.drop_movies
-        recs = get_data(url, headers, data)
+    # # Set up the button to drop the disliked movies
+    # if st.button("Drop Disliked Movies", key="drop_dislikes"):
+    #     for item in st.session_state.drop_movies:
+    #         st.session_state.persisted_drops.append(item)
+    #     data['drop_movies'] = st.session_state.drop_movies
+    #     recs = get_data(url, headers, data)
 
     
 
@@ -215,15 +219,15 @@ if uploaded_file is not None:
             
             movie_string = "movie_" + str(i+1)
 
-            review = st.radio(label="", 
-                             options=["hidden", ":thumbsup:", ":thumbsdown:"], 
-                             key=title+"-"+director+"-review",
-                             horizontal=True,
-                             label_visibility="collapsed")
+            # review = st.radio(label="", 
+            #                  options=["hidden", ":thumbsup:", ":thumbsdown:"], 
+            #                  key=title+"-"+str(imdb_score)+"-review",
+            #                  horizontal=True,
+            #                  label_visibility="collapsed")
             
-            if review == ":thumbsdown:":
-                drop_movie = {'omdb_title': title, 'omdb_director': director}
-                st.session_state.drop_movies.append(drop_movie)
+            # if review == ":thumbsdown:":
+            #     drop_movie = {'omdb_title': title, 'omdb_director': director}
+            #     st.session_state.drop_movies.append(drop_movie)
             
 
             with st.expander("More details"):
