@@ -8,6 +8,18 @@ import json
 
 st.set_page_config(layout="wide")
 
+st.markdown(
+    """
+    <style>
+        div[data-testid="stStyledFullScreenFrame"] div {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 """
 # Behind the Scenes
 
@@ -21,7 +33,13 @@ Spotify is one of the most widely used music streaming platforms and their API c
 
 #### Implementation 
 Using the plot summaries and the genres of each movie, we used Open AI’s GPT 3.5 to produce a sentiment score between 0 and 1 for the four moods (happy, sad, energetic, calm). To predict mood from a music playlist, we used layered classification models to predict the probabilities of those same four moods, as a way to bridge the music and movie worlds. Once this was done, we applied a cosine similarity between the mood profile from the clustered songs to the mood vectors for each movie and got the top movies. Once we got a list of movies matching the mood profile, we then predicted the most probable movie genres a user would watch and applied this as a filter to the movies that were already given, resulting in the top 5 movies you see. 
+"""
 
+st.write(f'<br>',unsafe_allow_html=True)
+st.image("images/MovieMood_Arch.png")
+st.write(f'<br><br>',unsafe_allow_html=True)
+
+"""
 
 #### Acknowledgements
 We wanted to thank our instructors, Joyce Shen and Todd Holloway, for their guidance and ongoing support for this project. We then wanted to thank fellow classmate, Max Eagle, for providing us with our data source and data gathering technique for all of the movies we used in the project. Finally, we want to thank Chris Volinsky, NYU Professor/Netflix Prize winner who used to work at AT&T’s Chief Data Office with Sumedh, for his guidance and insightful comments on our modeling approach for MovieMood.
