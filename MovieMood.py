@@ -2,7 +2,6 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from io import StringIO
 import requests
 import json
 
@@ -16,22 +15,9 @@ st.markdown(
             font-size: 0.8rem !important;
         } 
 
-        div[role=radiogroup] label:first-of-type 
-        {
-            visibility: hidden;
-            height: 0px;
-            width: 0px;
-        }
-
         div[data-testid="stLinkButton"]
         {
             text-align: center;
-        }
-
-        .stRadio [role=radiogroup]
-        {
-            align-items: center;
-            justify-content: center;
         }
 
         div[data-testid="stButton"]
@@ -39,56 +25,49 @@ st.markdown(
             text-align: end;
         } 
 
-
+        /* Breakpoints for More Details sections below movie posters */
         @media only screen and (min-width: 768px) {
             div[data-testid="stImage"] {
                 height: 200px;
             }
         }
 
-        /* Large devices (laptops/desktops, 992px and up) */
         @media only screen and (min-width: 1000px) {
             div[data-testid="stImage"] {
                 height: 200px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 1100px) {
             div[data-testid="stImage"] {
                 height: 250px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 1300px) {
             div[data-testid="stImage"] {
                 height: 350px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 1600px) {
             div[data-testid="stImage"] {
                 height: 400px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 1800px) {
             div[data-testid="stImage"] {
                 height: 500px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 2000px) {
             div[data-testid="stImage"] {
                 height: 550px;
             }
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 2200px) {
             div[data-testid="stImage"] {
                 height: 650px;
@@ -171,17 +150,23 @@ with st.expander("See optional filters for movie recommendations"):
     filter_ratings = st.multiselect(
         'What are your preferred movie ratings?',
         ['G', 'PG', 'PG-13', 'R', 'Unrated'])
+    
+    filter_imdb_score = st.radio(
+            "What is your preferred minimum IMDB score?",
+            [5, 6, 7, 8, 9],
+            horizontal=True
+        )
 
     
 
-if 'drop_movies' not in st.session_state:
-    st.session_state.drop_movies = []
+# if 'drop_movies' not in st.session_state:
+#     st.session_state.drop_movies = []
 
 if 'all_movies' not in st.session_state:
     st.session_state.all_movies = []
 
-if 'persisted_drops' not in st.session_state:
-    st.session_state.persisted_drops = []
+# if 'persisted_drops' not in st.session_state:
+#     st.session_state.persisted_drops = []
 
 
 
@@ -207,8 +192,9 @@ if uploaded_file is not None:
     # Add the filter selections to the data for the API call
     data["filter_ratings"] = list(filter_ratings)
     data["filter_genres"] = [x.lower() for x in list(filter_genres)]
+    data["imdb_ratings"] = filter_imdb_score
 
-    data['drop_movies'] = st.session_state.persisted_drops
+    # data['drop_movies'] = st.session_state.persisted_drops
 
     # Define remaining API parameters
     url = "https://neilprabhu.mids255.com/predict"
@@ -226,11 +212,12 @@ if uploaded_file is not None:
     with col2:
         # Set up the button to regenerate the recommendations
         if st.button("↻ Regenerate Recommendations", key="regenerate"):
-            # st.write(data)
-            for item in st.session_state.all_movies:
-                st.session_state.drop_movies.append(item)
-                st.session_state.persisted_drops.append(item)
-            data['drop_movies'] = st.session_state.drop_movies
+
+            data['drop_movies'] = st.session_state.all_movies
+            data["filter_ratings"] = list(filter_ratings)
+            data["filter_genres"] = [x.lower() for x in list(filter_genres)]
+            data["imdb_ratings"] = filter_imdb_score
+
             recs = get_data(url, headers, data)
 
 
