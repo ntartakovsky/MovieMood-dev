@@ -136,20 +136,16 @@ with st.expander("See optional filters for movie recommendations"):
         'Music',
         'Musical',
         'Mystery',
-        'News',
-        'Reality-TV',
         'Romance',
         'Sci-Fi',
         'Short',
         'Thriller',
         'Sport',
-        'Talk-Show',
-        'War',
-        'Western'])
+        'War'])
 
     filter_ratings = st.multiselect(
         'What are your preferred movie ratings?',
-        ['G', 'PG', 'PG-13', 'R', 'Unrated'])
+        ['G', 'PG', 'PG-13', 'R', 'Not Rated'])
     
     filter_imdb_score = st.radio(
             "What is your preferred minimum IMDB score?",
