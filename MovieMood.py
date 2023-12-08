@@ -122,7 +122,7 @@ uploaded_file = st.file_uploader("Upload your Spotify playlist CSV file below:")
 
 filter_genres = []
 filter_ratings = []
-
+filter_imdb_score = 5
 
     
 
@@ -142,6 +142,26 @@ st.write(f'<br><br>',unsafe_allow_html=True)
 
 # Get the movie recommendations and display them
 if uploaded_file is not None:
+
+    # Pull the spotify CSV file and reformat the music data for the API call
+    df = pd.read_csv(uploaded_file)
+    arr = df.to_numpy()
+    data = {
+        "music_list":[["Danceability","Energy","Key","Loudness","Mode","Speechiness","Acousticness","Instrumentalness","Liveness","Valence","Tempo","Time Signature"]]
+    }
+    for item in arr:
+        list_str = list(item)[-12:]
+        new_list = []
+        for num in list_str:
+            new_list.append(str(num))
+        data['music_list'].append(new_list)
+
+    # Define remaining API parameters
+    url = "https://neilprabhu.mids255.com/predict"
+    headers = {"Content-Type": "application/json"}
+
+
+
 
     # Create title & button header above the recommendation
     col1,col2=st.columns(2)
@@ -186,6 +206,7 @@ if uploaded_file is not None:
         filter_ratings = st.multiselect(
             'What are your preferred movie ratings?',
             ['G', 'PG', 'PG-13', 'R', 'Not Rated'])
+    
         
         filter_imdb_score = st.radio(
                 "What is your preferred minimum IMDB score?",
@@ -198,31 +219,10 @@ if uploaded_file is not None:
 
 
 
-
-
-    # Pull the spotify CSV file and reformat the music data for the API call
-    df = pd.read_csv(uploaded_file)
-    arr = df.to_numpy()
-    data = {
-        "music_list":[["Danceability","Energy","Key","Loudness","Mode","Speechiness","Acousticness","Instrumentalness","Liveness","Valence","Tempo","Time Signature"]]
-    }
-    for item in arr:
-        list_str = list(item)[-12:]
-        new_list = []
-        for num in list_str:
-            new_list.append(str(num))
-        data['music_list'].append(new_list)
-
     # Add the filter selections to the data for the API call
     data["filter_ratings"] = list(filter_ratings)
     data["filter_genres"] = [x.lower() for x in list(filter_genres)]
     data["imdb_ratings"] = filter_imdb_score
-
-    # data['drop_movies'] = st.session_state.persisted_drops
-
-    # Define remaining API parameters
-    url = "https://neilprabhu.mids255.com/predict"
-    headers = {"Content-Type": "application/json"}
 
     # Call the API to get the movie recs
     recs = get_data(url, headers, data)
