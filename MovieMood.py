@@ -197,7 +197,6 @@ if uploaded_file is not None:
     headers = {"Content-Type": "application/json"}
 
     # Call the API to get the movie recs
-    st.write(data)
     recs = get_data(url, headers, data)
 
 
