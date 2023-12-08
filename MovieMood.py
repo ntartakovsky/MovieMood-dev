@@ -100,13 +100,17 @@ def get_data(url, headers, data):
 # Set up the title & introduction!
 """
 # Welcome to MovieMood!
-
-We use your Spotify playlist to recommend movies that match your mood.
 """
 
+st.write(f' <p style="font-size:1rem;font-style: italic;"> We strive to bridge the gap between music and movies, and enrich users\' emotional journeys, to create a uniquely personalized and curated multimedia experience. </p>',unsafe_allow_html=True)
+
 """
+MovieMood uses your Spotify playlist to recommend movies that match your mood. Navigate to the Behind the Scenes page on the left-side menu to learn more about how we generate your recommendations. 
 #
-To use our engine, you will need to upload a CSV file containing your Spotify playlist details.
+"""
+
+"""
+To get your recommendations, you will need to upload a CSV file containing your Spotify playlist details.
 Instructions to retrieve your CSV file:
 1. Navigate to www.exportify.net. 
 2. Log in with your Spotify credentials.
@@ -118,40 +122,7 @@ uploaded_file = st.file_uploader("Upload your Spotify playlist CSV file below:")
 
 filter_genres = []
 filter_ratings = []
-with st.expander("See optional filters for movie recommendations"):
-    filter_genres = st.multiselect(
-        'What are your preferred movie genres?',
-        ['Action',
-        'Adventure',
-        'Animation',
-        'Biography',
-        'Comedy',
-        'Crime',
-        'Documentary',
-        'Drama',
-        'Family',
-        'Fantasy',
-        'History',
-        'Horror',
-        'Music',
-        'Musical',
-        'Mystery',
-        'Romance',
-        'Sci-Fi',
-        'Short',
-        'Thriller',
-        'Sport',
-        'War'])
 
-    filter_ratings = st.multiselect(
-        'What are your preferred movie ratings?',
-        ['G', 'PG', 'PG-13', 'R', 'Not Rated'])
-    
-    filter_imdb_score = st.radio(
-            "What is your preferred minimum IMDB score?",
-            [5, 6, 7, 8, 9],
-            horizontal=True
-        )
 
     
 
@@ -171,6 +142,63 @@ st.write(f'<br><br>',unsafe_allow_html=True)
 
 # Get the movie recommendations and display them
 if uploaded_file is not None:
+
+    # Create title & button header above the recommendation
+    col1,col2=st.columns(2)
+    with col1:
+        st.write(f' <p style="font-size: 1.3rem;font-weight: 600;"> Movie Recommendations </p>',unsafe_allow_html=True)
+    with col2:
+        # Set up the button to regenerate the recommendations
+        if st.button("↻ Regenerate Recommendations", key="regenerate"):
+
+            data['drop_movies'] = st.session_state.all_movies
+            data["filter_ratings"] = list(filter_ratings)
+            data["filter_genres"] = [x.lower() for x in list(filter_genres)]
+            data["imdb_ratings"] = filter_imdb_score
+
+            recs = get_data(url, headers, data)
+
+    with st.expander("See optional filters for movie recommendations"):
+        filter_genres = st.multiselect(
+            'What are your preferred movie genres?',
+            ['Action',
+            'Adventure',
+            'Animation',
+            'Biography',
+            'Comedy',
+            'Crime',
+            'Documentary',
+            'Drama',
+            'Family',
+            'Fantasy',
+            'History',
+            'Horror',
+            'Music',
+            'Musical',
+            'Mystery',
+            'Romance',
+            'Sci-Fi',
+            'Short',
+            'Thriller',
+            'Sport',
+            'War'])
+
+        filter_ratings = st.multiselect(
+            'What are your preferred movie ratings?',
+            ['G', 'PG', 'PG-13', 'R', 'Not Rated'])
+        
+        filter_imdb_score = st.radio(
+                "What is your preferred minimum IMDB score?",
+                [5, 6, 7, 8, 9],
+                horizontal=True
+            )
+        
+
+
+
+
+
+
 
     # Pull the spotify CSV file and reformat the music data for the API call
     df = pd.read_csv(uploaded_file)
@@ -201,21 +229,60 @@ if uploaded_file is not None:
 
 
 
-    # Create title & button header above the recommendation
-    col1,col2=st.columns(2)
-    with col1:
-        st.write(f' <p style="font-size: 1.3rem;font-weight: 600;"> Movie Recommendations </p>',unsafe_allow_html=True)
-    with col2:
-        # Set up the button to regenerate the recommendations
-        if st.button("↻ Regenerate Recommendations", key="regenerate"):
 
-            data['drop_movies'] = st.session_state.all_movies
-            data["filter_ratings"] = list(filter_ratings)
-            data["filter_genres"] = [x.lower() for x in list(filter_genres)]
-            data["imdb_ratings"] = filter_imdb_score
 
-            recs = get_data(url, headers, data)
 
+
+
+
+    # Display the movie recommendations & details
+
+    col1,col2,col3,col4,col5=st.columns(5)
+    cols=[col1,col2,col3,col4,col5]
+    
+    for i in range(0,len(recs['movies_list'])):
+        with cols[i]:
+            title = recs['movies_list'][i]['omdb_title']
+            poster = recs['movies_list'][i]['omdb_poster']
+            plot = recs['movies_list'][i]['omdb_plot']
+            genres = recs['movies_list'][i]['genres']
+            director = recs['movies_list'][i]['omdb_director']
+            actors = recs['movies_list'][i]['omdb_actors']
+            imdb_score = recs['movies_list'][i]['imdb_score']
+            runtime = recs['movies_list'][i]['omdb_runtime']
+            rated = recs['movies_list'][i]['rated']
+            imdb_url = recs['movies_list'][i]['imdb_url']
+            rotten_score = recs['movies_list'][i]['rotten_tomatoes_score']
+
+
+            movie_dict = {'omdb_title': title, 'omdb_director': director}
+            st.session_state.all_movies.append(movie_dict)
+
+
+
+
+
+            st.write(f' <p style="font-size: 0.9rem;height: 50px;display: flex;align-items: end;font-weight: 600;"> {title} </p>',unsafe_allow_html=True)
+            cols[i].image(poster, use_column_width="always")
+            
+            movie_string = "movie_" + str(i+1)
+
+            with st.expander("More details"):
+                st.write(f' <p style="font-size:0.75rem"> {plot} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> Runtime: {runtime} minutes</p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> Rated: {rated} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> IMDB Score: {imdb_score} </p>',unsafe_allow_html=True)
+                if rotten_score:
+                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: {int(rotten_score)}% </p>',unsafe_allow_html=True)
+                else:
+                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: Not Available </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> Genres: {genres} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> Directed by: {director} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> Leading Actors: {actors} </p>',unsafe_allow_html=True)
+                st.link_button("Go to IMDB Page →", imdb_url)
+
+
+    st.write(f'<br>',unsafe_allow_html=True)
 
     with st.expander("See how we generated your recommendations"):
         num_clusters = len(recs["spotify_information"])
@@ -288,52 +355,6 @@ if uploaded_file is not None:
                 else:
                     st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
     
-
-    # Display the movie recommendations & details
-
-    col1,col2,col3,col4,col5=st.columns(5)
-    cols=[col1,col2,col3,col4,col5]
-    
-    for i in range(0,len(recs['movies_list'])):
-        with cols[i]:
-            title = recs['movies_list'][i]['omdb_title']
-            poster = recs['movies_list'][i]['omdb_poster']
-            plot = recs['movies_list'][i]['omdb_plot']
-            genres = recs['movies_list'][i]['genres']
-            director = recs['movies_list'][i]['omdb_director']
-            actors = recs['movies_list'][i]['omdb_actors']
-            imdb_score = recs['movies_list'][i]['imdb_score']
-            runtime = recs['movies_list'][i]['omdb_runtime']
-            rated = recs['movies_list'][i]['rated']
-            imdb_url = recs['movies_list'][i]['imdb_url']
-            rotten_score = recs['movies_list'][i]['rotten_tomatoes_score']
-
-
-            movie_dict = {'omdb_title': title, 'omdb_director': director}
-            st.session_state.all_movies.append(movie_dict)
-
-
-
-
-
-            st.write(f' <p style="font-size: 0.9rem;height: 50px;display: flex;align-items: end;font-weight: 600;"> {title} </p>',unsafe_allow_html=True)
-            cols[i].image(poster, use_column_width="always")
-            
-            movie_string = "movie_" + str(i+1)
-
-            with st.expander("More details"):
-                st.write(f' <p style="font-size:0.75rem"> {plot} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Runtime: {runtime} minutes</p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Rated: {rated} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> IMDB Score: {imdb_score} </p>',unsafe_allow_html=True)
-                if rotten_score:
-                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: {int(rotten_score)}% </p>',unsafe_allow_html=True)
-                else:
-                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: Not Available </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Genres: {genres} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Directed by: {director} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Leading Actors: {actors} </p>',unsafe_allow_html=True)
-                st.link_button("Go to IMDB Page →", imdb_url)
 
 
 
