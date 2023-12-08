@@ -27,7 +27,7 @@ Current movie recommendation systems use your movie watching history to make sug
 
 
 #### Data Sources
-Spotify is one of the most widely used music streaming platforms and their API contains several important audio features, like, danceability, energy, valence, acousticness, & loudness. There are also several playlists on Spotify associated with someone’s mood. We focused on four core moods (happy, sad, energetic, calm) as they are based on psychologist Robert Thayer’s traditional model of mood and gathered several songs from Spotify that represent each of these 4 moods. Additionally, for our movie dataset, we gathered a set of movies spanning about 30+ years and scraped all the movies from OMDB and Wikipedia, including the plot summaries. We ensured that the movies collected had at least a 5.0 rating on IMDB. Finally, we built a dataset of 100+ movie soundtracks from Spotify that also had IMDB genre labels. This was trained and used to predict the most probable movie genres a user would watch. 
+Spotify's API offers key audio features such as danceability, energy, valence, acousticness, and loudness. We curated playlists representing core moods (happy, sad, energetic, calm) based on psychologist Robert Thayer's model. For our movie dataset, spanning 30+ years, we scraped movies from OMDB and Wikipedia with plot summaries. Finally, to predict likely-to-watch movie genres, we compiled a dataset of 100+ movie soundtracks from Spotify with IMDB genre labels.
 
 
 #### Implementation 
