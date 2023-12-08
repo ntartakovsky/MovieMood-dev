@@ -94,7 +94,7 @@ def get_data(url, headers, data):
             print(f"Hello person, there's a {response.status_code} error with your request")
         return response.json()
     except:
-        return {'movies_list': []}
+        return {'movies_list': [], 'spotify_information': []}
 
 
 # Set up the title & introduction!
@@ -284,80 +284,87 @@ if uploaded_file is not None:
 
     st.write(f'<br>',unsafe_allow_html=True)
 
-    with st.expander("See how we generated your recommendations"):
-        num_clusters = len(recs["spotify_information"])
+    if len(recs["spotify_information"]) > 0:
 
-        if num_clusters == 1:
-            st.write(f' <p style="font-size:1rem"> We identified 1 taste cluster in your playlist. </p>',unsafe_allow_html=True)
-        else:
-            st.write(f' <p style="font-size:1rem"> We identified {num_clusters} taste clusters in your playlist. Next, we extracted the mood and music characteristics for each cluster, and then found the movies that were the best match for your mood and taste!</p>',unsafe_allow_html=True)
+        with st.expander("See how we generated your recommendations"):
+
+            st.write(recs["spotify_information"])
 
 
-        cols = st.columns(num_clusters)
+            num_clusters = len(recs["spotify_information"])
 
-        for i in range(0, num_clusters):
-            with cols[i]:
-                mood_vector = recs["spotify_information"][str(i)]['mood_vector']
-                danceability = recs["spotify_information"][str(i)]['danceability']
-                acousticness = recs["spotify_information"][str(i)]['acousticness']
-                energy = recs["spotify_information"][str(i)]['energy']
-                instrumentalness = recs["spotify_information"][str(i)]['instrumentalness']
-                liveness = recs["spotify_information"][str(i)]['liveness']
-                valence = recs["spotify_information"][str(i)]['valence']
-                loudness = recs["spotify_information"][str(i)]['loudness']
-                speechiness = recs["spotify_information"][str(i)]['speechiness']
-                tempo = recs["spotify_information"][str(i)]['tempo']
-
-                st.write(f' <p style="font-size: 1rem;font-weight: 600;background-color: rgb(240, 242, 246);text-align: center;padding: 5px;border: 1px solid gray;"> Cluster #{i+1} </p>',unsafe_allow_html=True)
-
-                st.write(f' <p style="font-size: 0.9rem;font-weight: 600;"> Mood Breakdown: </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Happy: {str(round(mood_vector[0]*100.00, 2))}% </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Sad: {str(round(mood_vector[1]*100.00, 2))}%  </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Energetic: {str(round(mood_vector[2]*100.00, 2))}%  </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Calm: {str(round(mood_vector[3]*100.00, 2))}%  </p>',unsafe_allow_html=True)
-
-                st.write(f' <p style="font-size: 0.9rem;padding-top: 20px;font-weight: 600;"> Spotify Stats: </p>',unsafe_allow_html=True)
-                if danceability < 0.3:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Danceability </p>',unsafe_allow_html=True)
-                elif danceability < 0.5:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Danceability </p>',unsafe_allow_html=True)
-                elif danceability < 0.7:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Danceability </p>',unsafe_allow_html=True)
-                else:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Danceability </p>',unsafe_allow_html=True)
-
-                if energy < 0.3:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Energy </p>',unsafe_allow_html=True)
-                elif energy < 0.5:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Energy </p>',unsafe_allow_html=True)
-                elif energy < 0.7:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Energy </p>',unsafe_allow_html=True)
-                else:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Energy </p>',unsafe_allow_html=True)
+            if num_clusters == 1:
+                st.write(f' <p style="font-size:1rem"> We identified 1 taste cluster in your playlist. </p>',unsafe_allow_html=True)
+            else:
+                st.write(f' <p style="font-size:1rem"> We identified {num_clusters} taste clusters in your playlist. Next, we extracted the mood and music characteristics for each cluster, and then found the movies that were the best match for your mood and taste!</p>',unsafe_allow_html=True)
 
 
-                if tempo < 0.3:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Tempo </p>',unsafe_allow_html=True)
-                elif tempo < 0.5:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Tempo </p>',unsafe_allow_html=True)
-                elif tempo < 0.7:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Tempo </p>',unsafe_allow_html=True)
-                else:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Tempo </p>',unsafe_allow_html=True)
+            cols = st.columns(num_clusters)
+
+            for i in range(0, num_clusters):
+                with cols[i]:
+                    mood_vector = recs["spotify_information"][str(i)]['mood_vector']
+                    danceability = recs["spotify_information"][str(i)]['danceability']
+                    acousticness = recs["spotify_information"][str(i)]['acousticness']
+                    energy = recs["spotify_information"][str(i)]['energy']
+                    instrumentalness = recs["spotify_information"][str(i)]['instrumentalness']
+                    liveness = recs["spotify_information"][str(i)]['liveness']
+                    valence = recs["spotify_information"][str(i)]['valence']
+                    loudness = recs["spotify_information"][str(i)]['loudness']
+                    speechiness = recs["spotify_information"][str(i)]['speechiness']
+                    tempo = recs["spotify_information"][str(i)]['tempo']
+
+                    st.write(f' <p style="font-size: 1rem;font-weight: 600;background-color: rgb(240, 242, 246);text-align: center;padding: 5px;border: 1px solid gray;"> Cluster #{i+1} </p>',unsafe_allow_html=True)
+
+                    st.write(f' <p style="font-size: 0.9rem;font-weight: 600;"> Mood Breakdown: </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Happy: {str(round(mood_vector[0]*100.00, 2))}% </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Sad: {str(round(mood_vector[1]*100.00, 2))}%  </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Energetic: {str(round(mood_vector[2]*100.00, 2))}%  </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Calm: {str(round(mood_vector[3]*100.00, 2))}%  </p>',unsafe_allow_html=True)
+
+                    st.write(f' <p style="font-size: 0.9rem;padding-top: 20px;font-weight: 600;"> Spotify Stats: </p>',unsafe_allow_html=True)
+                    if danceability < 0.3:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Danceability </p>',unsafe_allow_html=True)
+                    elif danceability < 0.5:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Danceability </p>',unsafe_allow_html=True)
+                    elif danceability < 0.7:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Danceability </p>',unsafe_allow_html=True)
+                    else:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Danceability </p>',unsafe_allow_html=True)
+
+                    if energy < 0.3:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Energy </p>',unsafe_allow_html=True)
+                    elif energy < 0.5:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Energy </p>',unsafe_allow_html=True)
+                    elif energy < 0.7:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Energy </p>',unsafe_allow_html=True)
+                    else:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Energy </p>',unsafe_allow_html=True)
 
 
-                if valence < 0.3:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Valence </p>',unsafe_allow_html=True)
-                elif valence < 0.5:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Valence </p>',unsafe_allow_html=True)
-                elif valence < 0.7:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Valence </p>',unsafe_allow_html=True)
-                else:
-                    st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
-    
+                    if tempo < 0.3:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Tempo </p>',unsafe_allow_html=True)
+                    elif tempo < 0.5:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Tempo </p>',unsafe_allow_html=True)
+                    elif tempo < 0.7:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Tempo </p>',unsafe_allow_html=True)
+                    else:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Tempo </p>',unsafe_allow_html=True)
 
 
+                    if valence < 0.3:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Low Valence </p>',unsafe_allow_html=True)
+                    elif valence < 0.5:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-Low Valence </p>',unsafe_allow_html=True)
+                    elif valence < 0.7:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Valence </p>',unsafe_allow_html=True)
+                    else:
+                        st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
+        
 
+    else:
+
+        st.write("Sorry, we couldn't find any movies! Adjust your filters and try again for better results.")
 
 
 
