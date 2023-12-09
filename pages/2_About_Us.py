@@ -36,7 +36,7 @@ col1,col2 = st.columns([3, 1])
 with col1:
     st.write(f' <p style="font-size:2.75rem;font-weight:700;padding-top:15px"> About Us </p>',unsafe_allow_html=True)
 with col2:
-    st.image("images/logo.jpg", width=250)
+    st.image("images/logo.jpg")
 
 """
 We are a group of grad students at UC Berkeley in the Master of Information and Data Science (MIDS) program. 
