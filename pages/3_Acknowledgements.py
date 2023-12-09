@@ -13,6 +13,9 @@ st.markdown(
         .block-container {
             padding-top: 30px;
         }
+        div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stStyledFullScreenFrame"] div {
+            justify-content: right;
+        }
     </style>
     """,
     unsafe_allow_html=True
