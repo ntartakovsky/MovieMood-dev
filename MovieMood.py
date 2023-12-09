@@ -86,6 +86,10 @@ st.markdown(
         div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stImage"] {
             height: 0px;
         }
+
+        div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stStyledFullScreenFrame"] div {
+            justify-content: right;
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -109,9 +113,10 @@ def get_data(url, headers, data):
 
 col1,col2 = st.columns([3, 1])
 with col1:
-    st.write(f' <p style="font-size:2.75rem;font-weight:700;padding-top:15px"> Welcome to MovieMood </p>',unsafe_allow_html=True)
+    st.write(f' <p style="font-size:2.75rem;font-weight:700;padding-top:10px"> Welcome to MovieMood </p>',unsafe_allow_html=True)
 with col2:
-    st.image("images/logo.jpg", width=250)
+    # st.image("images/logo.jpg", width=250)
+    st.image("images/logo.jpg")
 
 
 st.write(f' <p style="font-size:1rem;font-style: italic;"> At MovieMood, we strive to bridge the gap between music and movies, and enrich users\' emotional journeys, to create a uniquely personalized and curated multimedia experience. </p>',unsafe_allow_html=True)
