@@ -5,7 +5,7 @@ import streamlit as st
 import requests
 import json
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="MovieMood", page_icon=":film_frames:")
 
 st.markdown(
     """
@@ -27,49 +27,49 @@ st.markdown(
 
         /* Breakpoints for More Details sections below movie posters */
         @media only screen and (min-width: 768px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 200px;
             }
         }
 
         @media only screen and (min-width: 1000px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 200px;
             }
         }
 
         @media only screen and (min-width: 1100px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 250px;
             }
         }
 
         @media only screen and (min-width: 1300px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 350px;
             }
         }
 
         @media only screen and (min-width: 1600px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 400px;
             }
         }
 
         @media only screen and (min-width: 1800px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 500px;
             }
         }
 
         @media only screen and (min-width: 2000px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 550px;
             }
         }
 
         @media only screen and (min-width: 2200px) {
-            div[data-testid="stImage"] {
+            div[data-testid="column"] div[data-testid="stImage"] {
                 height: 650px;
             }
         }
@@ -77,6 +77,14 @@ st.markdown(
         div[data-testid="stExpanderDetails"] div[data-testid="column"] {
             border: 1px gray solid;
             padding: 30px;
+        }
+
+        .block-container {
+            padding-top: 30px;
+        }
+
+        div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="stImage"] {
+            height: 0px;
         }
     </style>
     """,
@@ -98,11 +106,15 @@ def get_data(url, headers, data):
 
 
 # Set up the title & introduction!
-"""
-# Welcome to MovieMood!
-"""
 
-st.write(f' <p style="font-size:1rem;font-style: italic;"> We strive to bridge the gap between music and movies, and enrich users\' emotional journeys, to create a uniquely personalized and curated multimedia experience. </p>',unsafe_allow_html=True)
+col1,col2 = st.columns([3, 1])
+with col1:
+    st.write(f' <p style="font-size:2.75rem;font-weight:700;padding-top:15px"> Welcome to MovieMood </p>',unsafe_allow_html=True)
+with col2:
+    st.image("images/logo.jpg", width=250)
+
+
+st.write(f' <p style="font-size:1rem;font-style: italic;"> At MovieMood, we strive to bridge the gap between music and movies, and enrich users\' emotional journeys, to create a uniquely personalized and curated multimedia experience. </p>',unsafe_allow_html=True)
 
 """
 MovieMood uses your Spotify playlist to recommend movies that match your mood. Navigate to the Behind the Scenes page on the left-side menu to learn more about how we generate your recommendations. 
@@ -288,8 +300,6 @@ if uploaded_file is not None:
 
         with st.expander("See how we generated your recommendations"):
 
-            st.write(recs["spotify_information"])
-
 
             num_clusters = len(recs["spotify_information"])
 
@@ -360,7 +370,10 @@ if uploaded_file is not None:
                         st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Valence </p>',unsafe_allow_html=True)
                     else:
                         st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
-        
+
+            st.write(f' <p style="font-size:1rem"> PRIVACY NOTICE </p>',unsafe_allow_html=True)
+
+
 
     else:
 

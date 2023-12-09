@@ -14,14 +14,21 @@ st.markdown(
             display: flex;
             justify-content: center;
         }
+        .block-container {
+            padding-top: 30px;
+        }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-"""
-# Behind the Scenes
+col1,col2 = st.columns([3, 1])
+with col1:
+    st.write(f' <p style="font-size:2.75rem;font-weight:700;padding-top:15px"> Behind the Scenes </p>',unsafe_allow_html=True)
+with col2:
+    st.image("images/logo.jpg", width=250)
 
+"""
 #### Purpose
 Current movie recommendation systems use your movie watching history to make suggestions, but the reality is that the average human listens to music much more frequently than they watch movies. Because of this, movie recommendation engines like Netflix provide a wide variety of recommendations that can be overwhelming and don’t necessarily align with your taste. Finally, several studies have shown how music in films influences the viewer’s experience, outside of non-musical audio and visual information. The crux of MovieMood is to infer someone’s mood and taste from their music playlist and map that to a set of movies that fit the same mood and taste profile. 
 
