@@ -316,10 +316,10 @@ if uploaded_file is not None:
 
             cols = st.columns(num_clusters)
 
-            i = -1
+            counter = -1
             for x in recs["spotify_information"]:
-                i = i + 1
-                with cols[i]:
+                counter = counter + 1
+                with cols[counter]:
                     mood_vector = recs["spotify_information"][x]['mood_vector']
                     danceability = recs["spotify_information"][x]['danceability']
                     acousticness = recs["spotify_information"][x]['acousticness']
