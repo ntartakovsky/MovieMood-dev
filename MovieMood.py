@@ -197,7 +197,7 @@ if uploaded_file is not None:
 
     with st.expander("See optional filters for movie recommendations"):
         filter_genres = st.multiselect(
-            'What are your preferred movie genres? (If none are selected, MovieMood will predict your preferred genre.)',
+            'What are your preferred movie genres? (If none are selected, MovieMood will predict your preferred genre)',
             ['Action',
             'Adventure',
             'Animation',
