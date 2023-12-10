@@ -318,7 +318,7 @@ if uploaded_file is not None:
 
             i = -1
             for x in recs["spotify_information"]:
-                i += 1
+                i = i + 1
                 with cols[i]:
                     mood_vector = recs["spotify_information"][x]['mood_vector']
                     danceability = recs["spotify_information"][x]['danceability']
