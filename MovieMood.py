@@ -316,18 +316,20 @@ if uploaded_file is not None:
 
             cols = st.columns(num_clusters)
 
-            for i in range(0, num_clusters):
+            i = -1
+            for x in recs["spotify_information"]:
+                i += 1
                 with cols[i]:
-                    mood_vector = recs["spotify_information"][str(i)]['mood_vector']
-                    danceability = recs["spotify_information"][str(i)]['danceability']
-                    acousticness = recs["spotify_information"][str(i)]['acousticness']
-                    energy = recs["spotify_information"][str(i)]['energy']
-                    instrumentalness = recs["spotify_information"][str(i)]['instrumentalness']
-                    liveness = recs["spotify_information"][str(i)]['liveness']
-                    valence = recs["spotify_information"][str(i)]['valence']
-                    loudness = recs["spotify_information"][str(i)]['loudness']
-                    speechiness = recs["spotify_information"][str(i)]['speechiness']
-                    tempo = recs["spotify_information"][str(i)]['tempo']
+                    mood_vector = recs["spotify_information"][x]['mood_vector']
+                    danceability = recs["spotify_information"][x]['danceability']
+                    acousticness = recs["spotify_information"][x]['acousticness']
+                    energy = recs["spotify_information"][x]['energy']
+                    instrumentalness = recs["spotify_information"][x]['instrumentalness']
+                    liveness = recs["spotify_information"][x]['liveness']
+                    valence = recs["spotify_information"][x]['valence']
+                    loudness = recs["spotify_information"][x]['loudness']
+                    speechiness = recs["spotify_information"][x]['speechiness']
+                    tempo = recs["spotify_information"][x]['tempo']
 
                     st.write(f' <p style="font-size: 1rem;font-weight: 600;background-color: rgb(240, 242, 246);text-align: center;padding: 5px;border: 1px solid gray;"> Cluster #{i+1} </p>',unsafe_allow_html=True)
 
