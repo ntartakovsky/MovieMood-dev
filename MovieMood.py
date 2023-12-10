@@ -376,7 +376,7 @@ if uploaded_file is not None:
                     else:
                         st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
 
-            st.write(f' <p style="font-size:1rem"> PRIVACY NOTICE </p>',unsafe_allow_html=True)
+            st.write(f' <p style="font-size:0.85rem;padding-top:20px;"> MovieMood strictly adheres to a data minimization approach. Only essential listening data is collected to perform the mood-based inference and provide relevant movie recommendations. Moreover, this data is not stored beyond the active session, ensuring that users\' personal information is not retained longer than necessary. Once the session ends, all collected data is promptly discarded, maintaining user privacy and reducing potential data-related risks. </p>',unsafe_allow_html=True)
 
 
 
