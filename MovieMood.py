@@ -197,7 +197,7 @@ if uploaded_file is not None:
 
     with st.expander("See optional filters for movie recommendations"):
         filter_genres = st.multiselect(
-            'What are your preferred movie genres?',
+            'What are your preferred movie genres? (If none are selected, MovieMood will predict your preferred genre.)',
             ['Action',
             'Adventure',
             'Animation',
@@ -285,23 +285,24 @@ if uploaded_file is not None:
             movie_string = "movie_" + str(i+1)
 
             with st.expander("More details"):
-                st.write(f' <p style="font-size:0.75rem"> {plot} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Runtime: {runtime} minutes</p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Rated: {rated} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> IMDB Score: {imdb_score} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Plot:</b> {plot} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Runtime:</b> {runtime} minutes</p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Rated:</b> {rated} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>IMDB Score:</b> {imdb_score} </p>',unsafe_allow_html=True)
                 if rotten_score:
-                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: {int(rotten_score)}% </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size:0.75rem"> <b>Rotten Tomatoes Score:</b> {int(rotten_score)}% </p>',unsafe_allow_html=True)
                 else:
-                    st.write(f' <p style="font-size:0.75rem"> Rotten Tomatoes Score: Not Available </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Genres: {genres} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Directed by: {director} </p>',unsafe_allow_html=True)
-                st.write(f' <p style="font-size:0.75rem"> Leading Actors: {actors} </p>',unsafe_allow_html=True)
+                    st.write(f' <p style="font-size:0.75rem"> <b>Rotten Tomatoes Score:</b> Not Available </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Genres:</b> {genres} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Directed by:</b> {director} </p>',unsafe_allow_html=True)
+                st.write(f' <p style="font-size:0.75rem"> <b>Leading Actors:</b> {actors} </p>',unsafe_allow_html=True)
                 st.link_button("Go to IMDB Page →", imdb_url)
 
 
     st.write(f'<br>',unsafe_allow_html=True)
 
     if len(recs["spotify_information"]) > 0:
+        counter = 0
 
         with st.expander("See how we generated your recommendations"):
 
@@ -316,10 +317,11 @@ if uploaded_file is not None:
 
             cols = st.columns(num_clusters)
 
-            counter = -1
+            
             for x in recs["spotify_information"]:
-                counter = counter + 1
                 with cols[counter]:
+
+
                     mood_vector = recs["spotify_information"][x]['mood_vector']
                     danceability = recs["spotify_information"][x]['danceability']
                     acousticness = recs["spotify_information"][x]['acousticness']
@@ -377,6 +379,8 @@ if uploaded_file is not None:
                         st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> Medium-High Valence </p>',unsafe_allow_html=True)
                     else:
                         st.write(f' <p style="font-size: 0.9rem;padding-left: 20px"> High Valence </p>',unsafe_allow_html=True)
+                
+                counter = counter + 1
 
             st.write(f' <p style="font-size:0.85rem;padding-top:20px;"> MovieMood strictly adheres to a data minimization approach. Only essential listening data is collected to perform the mood-based inference and provide relevant movie recommendations. Moreover, this data is not stored beyond the active session, ensuring that users\' personal information is not retained longer than necessary. Once the session ends, all collected data is promptly discarded, maintaining user privacy and reducing potential data-related risks. </p>',unsafe_allow_html=True)
 
